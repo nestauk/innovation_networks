@@ -1,7 +1,9 @@
+import os
 import pytest
+import sys
 
 from datetime import datetime, timedelta
-from innovation_networks.data_gathering.github import get_data, urls
+from innovation_networks.data_gathering.github import get_data
 
 
 def test_make_url():
@@ -10,7 +12,6 @@ def test_make_url():
     year = 1987
     month = 11
     hour = 8
-
     url = get_data.make_url(year=year,
                             month=month,
                             day=day,
@@ -21,21 +22,24 @@ def test_make_url():
 
 def test_urls():
     """Correct urls are returned for two year period"""
-    urls_list = urls()
+    urls_list = get_data.urls()
     test_url = ("http://data.githubarchive.org/{}.json.gz"
                 .format((datetime.now() - timedelta(731)).strftime("%Y-%m-%d")))
-
     assert len(urls_list) == 731
     assert urls_list[0] == test_url
 
 
 def test_daterange():
+    """dateranges are correct"""
     l = (datetime(2016, 6, 6, 0, 0),
          datetime(2016, 6, 7, 0, 0))
-
     x = get_data.daterange(start_date=datetime(2016, 6, 6),
                            end_date=datetime(2016, 6, 8))
-
     assert l == tuple(x)
 
 
+def test_filename():
+    """Filenames are correct format"""
+    t = "{}".format('{}_github_event_data.json'.format(
+        datetime.now().strftime("%Y%m%d%S")))
+    assert t == get_data.out_file_name('~/').split('/')[-1:][0]
