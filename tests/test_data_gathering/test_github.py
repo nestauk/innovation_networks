@@ -27,3 +27,15 @@ def test_urls():
 
     assert len(urls_list) == 731
     assert urls_list[0] == test_url
+
+
+def test_daterange():
+    l = (datetime(2016, 6, 6, 0, 0),
+         datetime(2016, 6, 7, 0, 0))
+
+    x = get_data.daterange(start_date=datetime(2016, 6, 6),
+                           end_date=datetime(2016, 6, 8))
+
+    assert l == tuple(x)
+
+
