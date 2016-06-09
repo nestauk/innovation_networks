@@ -1,6 +1,7 @@
 import pytest
 
-from innovation_networks.data_gathering.github import get_data
+from datetime import datetime, timedelta
+from innovation_networks.data_gathering.github import get_data, urls
 
 
 def test_make_url():
@@ -16,3 +17,13 @@ def test_make_url():
                             hour=hour)
     test_url = "http://data.githubarchive.org/1987-11-06-08.json.gz"
     assert url == test_url
+
+
+def test_urls():
+    """Correct urls are returned for two year period"""
+    urls_list = urls()
+    test_url = ("http://data.githubarchive.org/{}.json.gz"
+                .format((datetime.now() - timedelta(731)).strftime("%Y-%m-%d")))
+
+    assert len(urls_list) == 731
+    assert urls_list[0] == test_url
