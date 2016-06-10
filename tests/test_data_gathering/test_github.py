@@ -1,5 +1,7 @@
+import json
 import os
 import pytest
+import responses
 import sys
 
 from datetime import datetime, timedelta
@@ -24,7 +26,7 @@ def test_urls():
     """Correct urls are returned for two year period"""
     urls_list = get_data.urls()
     test_url = ("http://data.githubarchive.org/{}.json.gz"
-                .format((datetime.now() - timedelta(731)).strftime("%Y-%m-%d")))
+                .format((datetime.now() - timedelta(731)).strftime("%Y-%m-%d-%H")))
     assert len(urls_list) == 731
     assert urls_list[0] == test_url
 
@@ -40,6 +42,22 @@ def test_daterange():
 
 def test_filename():
     """Filenames are correct format"""
-    t = "{}".format('{}_github_event_data.json'.format(
+    t = "{}".format('{}_github_event_data.json.gz'.format(
         datetime.now().strftime("%Y%m%d%S")))
     assert t == get_data.out_file_name('~/').split('/')[-1:][0]
+
+@responses.activate
+def test_write_data():
+    """Test wrting data works"""
+    responses.add(responses.GET, 'http://test.com',
+                  body='{"test": "test data"}',
+                  content_type='application/json')
+    fp = open('.temp', 'wb')
+    url_list = ["http://test.com"]
+    get_data.write_data(fp, url_list)
+    fp.close()
+
+    with open('.temp', 'r') as fp:
+        d = json.load(fp)
+
+    assert d == json.loads('{"test": "test data"}')
