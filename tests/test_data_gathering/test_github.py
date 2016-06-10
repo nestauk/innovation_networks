@@ -46,6 +46,7 @@ def test_filename():
         datetime.now().strftime("%Y%m%d%S")))
     assert t == get_data.out_file_name('~/').split('/')[-1:][0]
 
+
 @responses.activate
 def test_write_data():
     """Test wrting data works"""
@@ -56,8 +57,6 @@ def test_write_data():
     url_list = ["http://test.com"]
     get_data.write_data(fp, url_list)
     fp.close()
-
     with open('.temp', 'r') as fp:
         d = json.load(fp)
-
     assert d == json.loads('{"test": "test data"}')
