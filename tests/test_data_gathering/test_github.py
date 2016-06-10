@@ -60,3 +60,4 @@ def test_write_data():
     with open('.temp', 'r') as fp:
         d = json.load(fp)
     assert d == json.loads('{"test": "test data"}')
+    os.remove('.temp')
