@@ -2,13 +2,11 @@
 Uses https://www.githubarchive.org/ and gets the last 2 years of
 activity"""
 
-import calendar
 import logging
 import os
 import requests
 import sys
 
-from collections import deque
 from datetime import datetime, timedelta
 from time import sleep
 
@@ -91,7 +89,7 @@ def main():
         fp.close()
     except Exception as e:
         logging.error(e, exc_info=True)
-        wait(10)
+        sleep(10)
         # Restart, the list will still hold the relevant url,
         # as the 0 index isn't deleted until after file is flushed
         write_data(fp, url_list)
