@@ -42,7 +42,7 @@ def urls():
             single_date in daterange()]
 
 
-def daterange(start_date=datetime.now() - timedelta(2),
+def daterange(start_date=datetime.now() - timedelta(731),
               end_date=datetime.now()):
     """yields dates for last two years, counting from yesterday"""
     for n in range(int((end_date - start_date).days)):
