@@ -42,8 +42,7 @@ def test_daterange():
 
 def test_filename():
     """Filenames are correct format"""
-    t = "{}".format('{}_github_event_data.json.gz'.format(
-        datetime.now().strftime("%Y%m%d%S")))
+    t = 'github_event_data.json.gz'
     assert t == get_data.out_file_name('~/').split('/')[-1:][0]
 
 
