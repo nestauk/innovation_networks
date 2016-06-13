@@ -49,7 +49,8 @@ def daterange(start_date=datetime.now() - timedelta(731),
 
 def out_file_name(out_path):
     """Formatted file name"""
-    file_name = 'github_event_data.json.gz'
+    file_name = '{}_github_event_data.json.gz'.format(
+        datetime.now().strftime("%Y%m%d%S"))
     return os.path.join(out_path, file_name)
 
 
