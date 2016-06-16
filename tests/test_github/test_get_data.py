@@ -1,11 +1,18 @@
 import json
+import logging
 import os
-import pytest
 import responses
-import sys
 
 from datetime import datetime, timedelta
 from innovation_networks.data_gathering.github import get_data
+
+
+def test_logging_level():
+    """Set the logging level to critical and then test it"""
+    get_data.setup_logging(level=logging.CRITICAL)
+
+    assert not logging.getLogger().isEnabledFor(logging.DEBUG)
+    assert logging.getLogger().isEnabledFor(logging.CRITICAL)
 
 
 def test_make_url():
