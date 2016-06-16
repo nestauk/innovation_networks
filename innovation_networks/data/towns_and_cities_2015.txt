@@ -1,3 +1,10 @@
+uk
+united kingdom
+england
+scotland
+wales
+northern ireland
+ni
 london
 bolton
 bury
