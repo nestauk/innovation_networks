@@ -21,6 +21,10 @@ def main():
                         action='store',
                         help='file containing placenames, 1 per line')
 
+    parser.add_argument(dest='error_names',
+                        action='store',
+                        help='remove users with locations matching strings in this file')
+
     # input filename
     parser.add_argument(dest='datafile',
                         action='store',
@@ -41,6 +45,10 @@ def main():
     # List of towns and cities
     with open(args.place_names, 'r') as fp:
         towns_and_cities = fp.read().splitlines()
+
+    # Error names to remove from the final list
+    with open(args.error_names, 'r') as fp:
+        error_names = fp.read().splitlines()
 
     # List of entries that have a 'location' key
     data_locations = [x for x in data if 'location' in x['attributes']]
