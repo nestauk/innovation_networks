@@ -1,112 +1,119 @@
-'london'
-'bolton'
-'bury'
-'manchester'
-'salford'
-'oldham'
-'rochdale'
-'stockport'
-'wigan'
-'liverpool'
-'st helens'
-'southport'
-'birkenhead'
-'barnsley'
-'doncaster'
-'sheffield'
-'rotherham'
-'gateshead'
-'newcastle upon tyne'
-'south shields'
-'sunderland'
-'birmingham'
-'sutton coldfield'
-'coventry'
-'dudley'
-'west bromwich'
-'solihull'
-'walsall'
-'wolverhampton'
-'bradford'
-'huddersfield'
-'halifax'
-'leeds'
-'wakefield'
-'hartlepool'
-'middlesbrough'
-'stockton-on-tees'
-'darlington'
-'warrington'
-'blackburn'
-'blackpool'
-'kingston upon hull'
-'grimsby'
-'scunthorpe'
-'york'
-'derby'
-'leicester'
-'nottingham'
-'telford'
-'stoke-on-trent'
-'bath'
-'bristol'
-'weston-super-mare'
-'plymouth'
-'bournemouth'
-'poole'
-'swindon'
-'peterborough'
-'luton'
-'southend-on-sea'
-'chatham'
-'gillingham'
-'bracknell'
-'reading'
-'slough'
-'milton keynes'
-'brighton and hove'
-'portsmouth'
-'southampton'
-'bedford'
-'high wycombe'
-'cambridge'
-'chester'
-'carlisle'
-'mansfield'
-'chesterfield'
-'burton upon trent'
-'exeter'
-'eastbourne'
-'hastings'
-'basildon'
-'chelmsford'
-'colchester'
-'harlow'
-'cheltenham'
-'gloucester'
-'basingstoke'
-'hemel hempstead'
-'watford'
-'stevenage'
-'st albans'
-'maidstone'
-'burnley'
-'preston'
-'lincoln'
-'norwich'
-'northampton'
-'harrogate'
-'oxford'
-'shrewsbury'
-'newcastle-under-lyme'
-'ipswich'
-'guildford'
-'woking'
-'nuneaton'
-'worthing'
-'crawley'
-'worcester'
-'redditch'
-'swansea'
-'newport'
-'cardiff'
+uk
+united kingdom
+england
+scotland
+wales
+northern ireland
+ni
+london
+bolton
+bury
+manchester
+salford
+oldham
+rochdale
+stockport
+wigan
+liverpool
+st helens
+southport
+birkenhead
+barnsley
+doncaster
+sheffield
+rotherham
+gateshead
+newcastle upon tyne
+south shields
+sunderland
+birmingham
+sutton coldfield
+coventry
+dudley
+west bromwich
+solihull
+walsall
+wolverhampton
+bradford
+huddersfield
+halifax
+leeds
+wakefield
+hartlepool
+middlesbrough
+stockton-on-tees
+darlington
+warrington
+blackburn
+blackpool
+kingston upon hull
+grimsby
+scunthorpe
+york
+derby
+leicester
+nottingham
+telford
+stoke-on-trent
+bath
+bristol
+weston-super-mare
+plymouth
+bournemouth
+poole
+swindon
+peterborough
+luton
+southend-on-sea
+chatham
+gillingham
+bracknell
+reading
+slough
+milton keynes
+brighton and hove
+portsmouth
+southampton
+bedford
+high wycombe
+cambridge
+chester
+carlisle
+mansfield
+chesterfield
+burton upon trent
+exeter
+eastbourne
+hastings
+basildon
+chelmsford
+colchester
+harlow
+cheltenham
+gloucester
+basingstoke
+hemel hempstead
+watford
+stevenage
+st albans
+maidstone
+burnley
+preston
+lincoln
+norwich
+northampton
+harrogate
+oxford
+shrewsbury
+newcastle-under-lyme
+ipswich
+guildford
+woking
+nuneaton
+worthing
+crawley
+worcester
+redditch
+swansea
+newport
+cardiff
