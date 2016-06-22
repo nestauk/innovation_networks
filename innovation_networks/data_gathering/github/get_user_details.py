@@ -22,7 +22,7 @@ def details_url(login, detail_type):
     return url
 
 
-@ratelim.patient(5000, 3600)
+@ratelim.greedy(5000, 3600)
 def request_details(login, detail_type='repos', auth=None):
     """GET request to api.github for user and detail type. Optionally
     authenticate for higher rate limits"""
@@ -91,9 +91,25 @@ def rate_limit_ok(auth_details=None):
     else:
         time_till_renewal = r.get('resources', {}).get('core', {}).get('reset', None)
         delta = datetime.fromtimestamp(time_till_renewal) - datetime.now()
-        print('Waiting until {}'.format(
-            datetime.fromtimestamp(time_till_renewal)))
         time.sleep(delta.seconds)
+
+
+def details(data, detail_type, auth_details=None):
+    """Get the detail_type details for all users in data and save them to outfile"""
+    user_dict = {}
+    for user in data:
+        login = user.get('user')
+        if rate_limit_ok(auth_details):
+            r = request_details(login, detail_type=detail_type, auth=auth_details)
+            login_names = [{key: x.get(key, {})
+                            for key in ['id', 'login']} for x in r.json() if type(x) is dict]
+            user_dict[login] = login_names
+            rate_remaining = returned_rate_limit_remaining(r)
+            if rate_remaining > 0:
+                continue
+            else:
+                rate_limit_ok(auth_details)
+    return user_dict
 
 
 def main():
@@ -115,26 +131,19 @@ def main():
 
     auth_details = (username_passw())
 
-    # make the path if it doesn't exist
+    # make the outpath if it doesn't exist
     if not os.path.exists(args.outpath):
         os.mkdir(args.outpath)
 
+    # open the data file contianing login names
     with open(args.datafile, 'r') as fp:
         data = json.load(fp)
 
-    detail_types = ['repos']
-    for detail_type in detail_types:
-        out_file = out_file_name(args.outpath, detail_type)
-        for user in data[:2]:
-            login = user.get('user')
-            if rate_limit_ok(auth_details):
-                r = request_details(login, detail_type=detail_type, auth=auth_details)
-                rate_remaining = returned_rate_limit_remaining(r)
-                if rate_remaining > 0:
-                    continue
-                else:
-                    rate_limit_ok(auth_details)
+    for detail_type in ['following', 'repos']:
+        result = details(data, detail_type, auth_details)
 
+        with open(out_file_name(args.outpath, detail_type)) as fp:
+            json.dump(result, fp)
 
 if __name__ == "__main__":
     main()
