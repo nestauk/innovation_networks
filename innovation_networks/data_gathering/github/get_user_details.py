@@ -57,24 +57,26 @@ def username_passw():
         auth = None
     return auth
 
-
+@ratelim.patient(1, 2)
 def request_rate_limit_remaining(auth_details=None):
     """Check the remaining GitHub API calls remaining, returning the
     response object. Optionally authenticate with a username and password tuple
     to check against you login's remaining rate limit"""
-    if not auth_details:
-        r = requests.get('https://api.github.com/rate_limit').json()
-    else:
-        r = requests.get('https://api.github.com/rate_limit',
-                         auth=(auth_details[0],
-                               auth_details[1])).json()
-    return r
-
+    try:
+        if not auth_details:
+            r = requests.get('https://api.github.com/rate_limit').json()
+        else:
+            r = requests.get('https://api.github.com/rate_limit',
+                             auth=(auth_details[0],
+                             auth_details[1])).json()
+        return r
+    except requests.exceptions.ConnectionError as e:
+        return {}
 
 def returned_rate_limit_remaining(returned_request):
     """the remaining number of calls from a GitHub response object
     using the response's headers. Returns an integer value"""
-    return int(returned_request.headers.get('x-ratelimit-remaining'))
+    return int(returned_request.headers.get('x-ratelimit-remaining', 0))
 
 
 def rate_limit_ok(auth_details=None):
@@ -86,23 +88,31 @@ def rate_limit_ok(auth_details=None):
         r = request_rate_limit_remaining(auth_details)
 
     remaining = r.get('resources', {}).get('core', {}).get('remaining', 0)
-    if remaining > 0:
+    if remaining != 0:
         return True
     else:
-        time_till_renewal = r.get('resources', {}).get('core', {}).get('reset', None)
+        time_till_renewal = r.get(
+            'resources',
+            {}).get('core', {}).get('reset', None)
+    try:
         delta = datetime.fromtimestamp(time_till_renewal) - datetime.now()
         time.sleep(delta.seconds)
+    except TypeError as e:
+        t = 60
+        print('Waiting for {} seconds.'.format(t))
+        time.sleep(t)
+        rate_limit_ok(auth_details)
 
 
 def details(data, detail_type, auth_details=None):
     """Get the detail_type details for all users in data and save them to outfile"""
     user_dict = {}
-    for user in data:
-        login = user.get('user')
-        if rate_limit_ok(auth_details):
+    if rate_limit_ok(auth_details):
+        for user in data:
+            login = user.get('user')
             r = request_details(login, detail_type=detail_type, auth=auth_details)
             login_names = [{key: x.get(key, {})
-                            for key in ['id', 'login']} for x in r.json() if type(x) is dict]
+                            for key in ['id', 'login', 'name', ]} for x in r.json() if type(x) is dict]
             user_dict[login] = login_names
             rate_remaining = returned_rate_limit_remaining(r)
             if rate_remaining > 0:
@@ -139,10 +149,10 @@ def main():
     with open(args.datafile, 'r') as fp:
         data = json.load(fp)
 
-    for detail_type in ['following', 'repos']:
+    for detail_type in ['repos']:
         result = details(data, detail_type, auth_details)
 
-        with open(out_file_name(args.outpath, detail_type)) as fp:
+        with open(out_file_name(args.outpath, detail_type), 'w') as fp:
             json.dump(result, fp)
 
 if __name__ == "__main__":
