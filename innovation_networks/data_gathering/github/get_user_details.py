@@ -95,7 +95,7 @@ def rate_limit_ok(auth_details=None):
             'resources',
             {}).get('core', {}).get('reset', None)
     try:
-        delta = datetime.now() - datetime.utcfromtimestamp(time_till_renewal)
+        delta = datetime.utcfromtimestamp(time_till_renewal) - datetime.utcnow()
         print('sleeping for {} seconds'.format(delta.total_seconds()))
         time.sleep(delta.total_seconds())
     except TypeError as e:
