@@ -152,8 +152,8 @@ def main():
     for detail_type in ['repos']:
         result = details(data, detail_type, auth_details)
 
-        with open(out_file_name(args.outpath, detail_type), 'w') as fp:
-            json.dump(result, fp)
+    with open(out_file_name(args.outpath, detail_type), 'w') as fp:
+        json.dump(result, fp)
 
 if __name__ == "__main__":
     main()
