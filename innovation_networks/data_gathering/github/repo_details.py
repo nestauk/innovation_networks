@@ -43,25 +43,33 @@ def request_repo_details(login, repo_name, auth=None):
     return req
 
 
-def repo_crawl(data, auth_details=None, out_file=None):
+def repo_crawl(data, auth_details=None):
     """Get more detailed data on repos"""
-    with open(out_file, mode='w', encoding='utf-8') as fp:
-        if rate_limit_ok(auth_details):
-            for user in list(data.keys())[0:10]:
-                print(user)
-                repo_dict = {}
-                repo_dict[user] = []
-                for repo in data[user]:
-                    print(repo)
-                    repo_name = repo.get('name')
+    if rate_limit_ok(auth_details):
+        repo_dict = {}
+        for user in data:
+            print(user)
+            repo_dict[user] = []
+            for repo in data[user]:
+                print(repo)
+                repo_name = repo.get('name')
+                try:
                     r = request_repo_details(user, repo_name, auth=auth_details)
-                    repo_dict[user].append(r.json())
+                except:
+                    continue
+                repo_dict[user].append(r.json())
+                try:
                     rate_remaining = returned_rate_limit_remaining(r)
-                    if rate_remaining > 0:
-                        continue
-                    else:
+                except:
+                    continue
+                if rate_remaining > 0:
+                    continue
+                else:
+                    try:
                         rate_limit_ok(auth_details)
-                json.dump(repo_dict, fp)
+                    except:
+                        continue
+        return repo_dict
 
 
 def main():
@@ -91,7 +99,10 @@ def main():
     with open(args.datafile, 'r') as fp:
         data = json.load(fp)
 
-    repo_crawl(data, auth_details, out_file_name(args.outpath))
+    data = repo_crawl(data, auth_details)
+
+    with open(out_file_name(args.outpath), 'w') as fp:
+        json.dump(data, fp)
 
 if __name__ == "__main__":
     main()
