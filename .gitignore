@@ -1,3 +1,4 @@
 config.json
 tests/.cache/*
 *github*event_data*.json*
+*_github_uk_user_repo.json
