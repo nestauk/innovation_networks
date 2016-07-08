@@ -63,29 +63,27 @@ def main():
 
     # Get the tokens and build corpora
     dictionary = {}
+    repo_description_corpus = []
     for user in data:
-        repo_description_corpus = [process_words(
-            repo['description'], lmtzr=lmtzr) for repo in data[user]]
+        repo_description_corpus += [process_words(
+            repo['description'], lmtzr=lmtzr) for repo in data[user] if repo['description']]
 
-        # Create a dictionary of unique tokens
-        try:
-            dictionary = corpora.Dictionary(repo_description_corpus)
-            corpus = [dictionary.doc2bow(doc) for doc in repo_description_corpus]
+    try:
+        dictionary = corpora.Dictionary(repo_description_corpus)
+        corpus = [dictionary.doc2bow(doc) for doc in repo_description_corpus]
 
-            tf_idf = models.TfidfModel(corpus)
-            tf_idf_corpus = tf_idf[corpus]
+        tf_idf = models.TfidfModel(corpus)
+        tf_idf_corpus = tf_idf[corpus]
 
-            print(tf_idf_corpus)
+        lda_model = models.LdaModel(tf_idf_corpus,
+                                    id2word=dictionary,
+                                    num_topics=100,
+                                    passes=30,
+                                    iterations=200)
 
-            lda_model = models.LdaModel(tf_idf_corpus,
-                                        id2word=dictionary,
-                                        num_topics=5,
-                                        passes=10,
-                                        iterations=150)
-
-            #pprint(lda_model.show_topics(num_topics=5))
-        except TypeError as e:
-            logging.exception(e)
+        pprint(lda_model.show_topics(num_topics=100))
+    except TypeError as e:
+        print(e)
 
 
 if __name__ == "__main__":
